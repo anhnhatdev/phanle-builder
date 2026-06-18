@@ -1,7 +1,7 @@
 /**
  * FacebookScanService.ts
  * Core scan engine cho Facebook data scanning.
- * Dịch từ ChatCore Engine (background.ts) của babyvibe/facebook-scan-data-extension.
+ * Dịch từ ChatCore Engine (background.ts) của facebook-scan-data-extension.
  *
  * Chức năng:
  * - Quản lý session + auth cho scan operations

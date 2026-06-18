@@ -1,7 +1,7 @@
-﻿import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import ipc from '@/lib/ipc';
 
-const SUPPORT_GITHUB_URL = 'https://github.com/babyvibe/phanle-builder';
+const SUPPORT_GITHUB_URL = 'https://github.com/phanle-builder/phanle-builder';
 import { useAppStore, FONT_SCALE_MIN, FONT_SCALE_MAX, FONT_SCALE_STEP } from '@/store/appStore';
 import { useAccountStore } from '@/store/accountStore';
 import { useUpdateStore } from '@/store/updateStore';

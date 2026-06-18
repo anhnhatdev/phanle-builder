@@ -2,36 +2,36 @@ import { app, BrowserWindow, ipcMain, shell, Tray, Menu, nativeImage, protocol, 
 import * as path from 'path';
 import * as fs from 'fs';
 import { autoUpdater } from 'electron-updater';
-// import DatabaseService from '../src/services/database/DatabaseService';
-// import { registerLoginIpc } from './ipc/loginIpc';
-// import { registerZaloIpc } from './ipc/zaloIpc';
-// import { registerDatabaseIpc } from './ipc/databaseIpc';
-// import { registerFileIpc } from './ipc/fileIpc';
-// import { registerCRMIpc } from './ipc/crmIpc';
-// import { registerWorkflowIpc } from './ipc/workflowIpc';
-// import { registerIntegrationIpc } from './ipc/integrationIpc';
-// import { registerAIAssistantIpc } from './ipc/aiAssistantIpc';
-// import { registerUtilIpc } from './ipc/utilIpc';
-// import { registerEmployeeIpc } from './ipc/employeeIpc';
-// import { registerRelayIpc } from './ipc/relayIpc';
-// import { registerSyncIpc } from './ipc/syncIpc';
-// import { registerWorkspaceIpc } from './ipc/workspaceIpc';
-// import { registerFacebookIpc, reconnectAllFBAccounts } from './ipc/facebookIpc';
-// import { registerProxyIpc } from './ipc/proxyIpc';
-// import { registerErpTaskIpc } from './ipc/erpTaskIpc';
-// import { registerErpCalendarIpc } from './ipc/erpCalendarIpc';
-// import { registerErpNoteIpc } from './ipc/erpNoteIpc';
-// import { registerErpNotificationIpc } from './ipc/erpNotificationIpc';
-// import { registerErpHrmIpc } from './ipc/erpHrmIpc';
-// import { registerLockScreenIpc } from './ipc/lockScreenIpc';
-// import WorkspaceManager from '../src/utils/WorkspaceManager';
-// import HttpConnectionManager from '../src/services/http/HttpConnectionManager';
-// import WorkflowEngineService from '../src/services/workflow/WorkflowEngineService';
-// import IntegrationRegistry from '../src/services/integrations/IntegrationRegistry';
-// import EventBroadcaster from '../src/services/event/EventBroadcaster';
-// import CRMQueueService from '../src/services/crm/CRMQueueService';
-// import FileStorageService from '../src/services/file/FileStorageService';
-// import TrackingService from '../src/services/tracking/TrackingService';
+import DatabaseService from '../src/services/database/DatabaseService';
+import { registerLoginIpc } from './ipc/loginIpc';
+import { registerZaloIpc } from './ipc/zaloIpc';
+import { registerDatabaseIpc } from './ipc/databaseIpc';
+import { registerFileIpc } from './ipc/fileIpc';
+import { registerCRMIpc } from './ipc/crmIpc';
+import { registerWorkflowIpc } from './ipc/workflowIpc';
+import { registerIntegrationIpc } from './ipc/integrationIpc';
+import { registerAIAssistantIpc } from './ipc/aiAssistantIpc';
+import { registerUtilIpc } from './ipc/utilIpc';
+import { registerEmployeeIpc } from './ipc/employeeIpc';
+import { registerRelayIpc } from './ipc/relayIpc';
+import { registerSyncIpc } from './ipc/syncIpc';
+import { registerWorkspaceIpc } from './ipc/workspaceIpc';
+import { registerFacebookIpc, reconnectAllFBAccounts } from './ipc/facebookIpc';
+import { registerProxyIpc } from './ipc/proxyIpc';
+import { registerErpTaskIpc } from './ipc/erpTaskIpc';
+import { registerErpCalendarIpc } from './ipc/erpCalendarIpc';
+import { registerErpNoteIpc } from './ipc/erpNoteIpc';
+import { registerErpNotificationIpc } from './ipc/erpNotificationIpc';
+import { registerErpHrmIpc } from './ipc/erpHrmIpc';
+import { registerLockScreenIpc } from './ipc/lockScreenIpc';
+import WorkspaceManager from '../src/utils/WorkspaceManager';
+import HttpConnectionManager from '../src/services/http/HttpConnectionManager';
+import WorkflowEngineService from '../src/services/workflow/WorkflowEngineService';
+import IntegrationRegistry from '../src/services/integrations/IntegrationRegistry';
+import EventBroadcaster from '../src/services/event/EventBroadcaster';
+import CRMQueueService from '../src/services/crm/CRMQueueService';
+import FileStorageService from '../src/services/file/FileStorageService';
+import TrackingService from '../src/services/tracking/TrackingService';
 import { SHOW_DEV_TOOLS, IS_DEV_BUILD } from '../src/configs/BuildConfig';
 
 const isDev = IS_DEV_BUILD;
@@ -680,13 +680,12 @@ app.whenReady().then(async () => {
   });
 
   // Initialize workspace manager (must be BEFORE database init)
-  // WorkspaceManager.getInstance().initialize();
+  WorkspaceManager.getInstance().initialize();
 
   // Initialize database
-  // await DatabaseService.getInstance().initialize();
+  await DatabaseService.getInstance().initialize();
 
   // ── Migrate absolute local_paths → relative (runs once in background) ─────
-  /*
   setTimeout(() => {
     try {
       const migrated = DatabaseService.getInstance().migrateAllAbsolutePathsToRelative();
@@ -698,7 +697,6 @@ app.whenReady().then(async () => {
       console.warn(`[main] Startup path migration failed: ${e.message}`);
     }
   }, 2000);
-  */
 
   // ── Anti-debug: kiểm tra debugger attach (chỉ production/staging) ──────────
   if (!isDev) {
@@ -744,7 +742,6 @@ app.whenReady().then(async () => {
   }
 
   // Register all IPC handlers
-  /*
   registerLoginIpc(mainWindow);
   registerZaloIpc();
   registerDatabaseIpc();
@@ -768,12 +765,10 @@ app.whenReady().then(async () => {
   registerLockScreenIpc();
   // Auto-reconnect Facebook accounts
   setTimeout(() => reconnectAllFBAccounts(), 4000);
-  */
   // Ordered startup: relay + Zalo for all local workspaces FIRST, then remote workspaces
   setTimeout(() => startupAllWorkspaces().catch(err => {
     console.error('[main] startupAllWorkspaces error:', err.message);
   }), 3000);
-  /*
   // Resume any active CRM campaigns after restart
   setTimeout(() => CRMQueueService.getInstance().resumeActiveCampaigns(), 3000);
   // Initialize ERP Calendar reminders scheduler
@@ -809,7 +804,6 @@ app.whenReady().then(async () => {
       console.error('[main] TrackingService init error:', err.message);
     }
   }, 5000);
-  */
 
 
   // Check for updates

@@ -1,4 +1,4 @@
-﻿import React, { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useAccountStore } from '@/store/accountStore';
 import { useAppStore } from '@/store/appStore';
 import { useEmployeeStore } from '@/store/employeeStore';
@@ -9,7 +9,7 @@ import MergedInboxModal from './MergedInboxModal';
 import EmployeeLoginModal from './EmployeeLoginModal';
 import ipc from '@/lib/ipc';
 
-const SUPPORT_GITHUB_URL = 'https://github.com/babyvibe/phanle-builder';
+const SUPPORT_GITHUB_URL = 'https://github.com/phanle-builder/phanle-builder';
 
 export default function Dashboard() {
   const { updateAccountStatus, reorderAccounts } = useAccountStore();

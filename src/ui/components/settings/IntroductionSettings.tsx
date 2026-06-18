@@ -1179,7 +1179,7 @@ function AIAssistantPanel() {
                   Sau khi kết nối thành công, danh sách model trong phanle sẽ tự động cập nhật theo các provider bạn đã thêm vào 9Router.
                   Nếu có model mới xuất hiện trong Dashboard 9Router, bạn chỉ cần reload trang phanle để thấy — không cần cấu hình thêm.{' '}
                   <button
-                    onClick={() => ipc.shell?.openExternal('https://github.com/babyvibe/phanle-builder/issues/31')}
+                    onClick={() => ipc.shell?.openExternal('https://github.com/phanle-builder/phanle-builder/issues/31')}
                     className="text-blue-400 hover:text-blue-300 underline underline-offset-2 inline-flex items-center gap-0.5"
                   >
                     Theo dõi issue #31 →
@@ -1735,7 +1735,7 @@ function PolicyPanel() {
       <Card>
         <SectionTitle>6. Liên hệ & Hỗ trợ</SectionTitle>
         <BulletList items={[
-          'Link github: <strong class="text-gray-200">https://github.com/babyvibe</strong>',
+          'Link github: <strong class="text-gray-200">https://github.com/phanle-builder</strong>',
         ]} />
       </Card>
     </div>
@@ -1758,13 +1758,13 @@ function BugReportPanel() {
 
       <div className="flex justify-center gap-2">
         <button
-          onClick={() => ipc.shell?.openExternal('https://github.com/babyvibe/phanle-builder/issues/new')}
+          onClick={() => ipc.shell?.openExternal('https://github.com/phanle-builder/phanle-builder/issues/new')}
           className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium rounded-lg transition-colors"
         >
           Tạo Issue mới trên GitHub →
         </button>
         <button
-          onClick={() => ipc.shell?.openExternal('https://github.com/babyvibe/phanle-builder/issues')}
+          onClick={() => ipc.shell?.openExternal('https://github.com/phanle-builder/phanle-builder/issues')}
           className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-200 text-xs font-medium rounded-lg transition-colors"
         >
           Xem danh sách Issues
@@ -1968,10 +1968,10 @@ function DonateCoffeePanel() {
             <div>
               <p className="text-xs text-gray-200 font-medium">GitHub Issues</p>
               <button
-                onClick={() => ipc.shell?.openExternal('https://github.com/babyvibe/phanle-builder/issues')}
+                onClick={() => ipc.shell?.openExternal('https://github.com/phanle-builder/phanle-builder/issues')}
                 className="text-[11px] text-blue-400 hover:text-blue-300 transition-colors text-left"
               >
-                github.com/babyvibe/phanle-builder
+                github.com/phanle-builder/phanle-builder
               </button>
             </div>
           </div>
@@ -1980,10 +1980,10 @@ function DonateCoffeePanel() {
             <div>
               <p className="text-xs text-gray-200 font-medium">Telegram</p>
               <button
-                onClick={() => ipc.shell?.openExternal('https://t.me/babyvibe9')}
+                onClick={() => ipc.shell?.openExternal('https://t.me/phanle_support')}
                 className="text-[11px] text-blue-400 hover:text-blue-300 transition-colors text-left"
               >
-                t.me/babyvibe9
+                t.me/phanle_support
               </button>
             </div>
           </div>
@@ -1992,10 +1992,10 @@ function DonateCoffeePanel() {
             <div>
               <p className="text-xs text-gray-200 font-medium">Facebook</p>
               <button
-                onClick={() => ipc.shell?.openExternal('https://fb.com/tientt99')}
+                onClick={() => ipc.shell?.openExternal('https://fb.com/phanle_support')}
                 className="text-[11px] text-blue-400 hover:text-blue-300 transition-colors text-left"
               >
-                fb.com/tientt99
+                fb.com/phanle_support
               </button>
             </div>
           </div>

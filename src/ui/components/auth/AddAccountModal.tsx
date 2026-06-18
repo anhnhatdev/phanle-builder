@@ -3,7 +3,7 @@ import ipc from '@/lib/ipc';
 import { useAccountStore } from '@/store/accountStore';
 import { useAppStore } from '@/store/appStore';
 import {ZaloIcon, FacebookIcon, TelegramIcon} from '../common/ChannelBadge';
-import cookieGuideImg from '../../../assets/login/hd_login_fb_cookie.png';
+
 
 interface AddAccountModalProps {
   onClose: () => void;
@@ -935,13 +935,67 @@ function CookieGuidePopup({ onClose }: { onClose: () => void }) {
             ))}
           </div>
 
-          {/* Right: image */}
-          <div className="w-1/2 p-3 flex items-center justify-center">
-            <img
-              src={cookieGuideImg}
-              alt="Hướng dẫn lấy cookie Facebook"
-              className="max-w-full max-h-full object-contain rounded-lg"
-            />
+          {/* Right: mock DevTools */}
+          <div className="w-1/2 p-4 flex items-center justify-center bg-gray-900/40">
+            <div className="w-full h-full max-w-sm rounded-xl border border-gray-700 bg-gray-900 shadow-xl overflow-hidden flex flex-col font-mono text-[9px] text-gray-400 select-none">
+              {/* DevTools Header */}
+              <div className="bg-gray-800 px-3 py-2 border-b border-gray-700 flex items-center gap-2 shrink-0">
+                <span className="text-yellow-500 font-bold font-sans">⚙️ DevTools</span>
+                <div className="flex gap-1 ml-auto">
+                  <span className="w-2 h-2 rounded-full bg-red-500/80" />
+                  <span className="w-2 h-2 rounded-full bg-yellow-500/80" />
+                  <span className="w-2 h-2 rounded-full bg-green-500/80" />
+                </div>
+              </div>
+              
+              {/* Tab bar */}
+              <div className="bg-gray-850 border-b border-gray-700 flex gap-2 px-2 shrink-0">
+                <span className="px-2 py-1 text-gray-500 font-sans">Elements</span>
+                <span className="px-2 py-1 text-gray-500 font-sans">Console</span>
+                <span className="px-2 py-1 text-white border-b border-blue-400 bg-gray-900/60 font-semibold font-sans">Network</span>
+                <span className="px-2 py-1 text-gray-500 font-sans">Application</span>
+              </div>
+              
+              {/* Left pane / List of requests */}
+              <div className="flex-1 flex min-h-0">
+                <div className="w-1/3 border-r border-gray-750 p-1 bg-gray-950 space-y-1">
+                  <div className="px-1.5 py-0.5 bg-blue-500/10 text-blue-400 rounded-sm font-semibold truncate">facebook.com</div>
+                  <div className="px-1.5 py-0.5 text-gray-600 truncate">messages</div>
+                  <div className="px-1.5 py-0.5 text-gray-600 truncate">graphql</div>
+                </div>
+                
+                {/* Right pane / Headers */}
+                <div className="flex-1 p-2 bg-gray-900 overflow-y-auto space-y-2">
+                  <div className="font-sans">
+                    <span className="text-blue-400 font-semibold">Headers</span>
+                    <span className="mx-1 text-gray-600">Payload</span>
+                    <span className="text-gray-600">Response</span>
+                  </div>
+                  
+                  <div className="space-y-1.5 text-[8.5px]">
+                    <div>
+                      <p className="text-gray-500 font-semibold font-sans">Request URL:</p>
+                      <p className="text-gray-300 truncate">https://www.facebook.com/</p>
+                    </div>
+                    <div>
+                      <p className="text-gray-500 font-semibold font-sans">Request Method:</p>
+                      <p className="text-gray-300">GET</p>
+                    </div>
+                    
+                    <div className="border-t border-gray-800 pt-1.5">
+                      <p className="text-yellow-500/95 font-semibold font-sans">▼ Request Headers</p>
+                      <div className="pl-2 space-y-1">
+                        <p className="truncate"><span className="text-blue-400">accept:</span> text/html...</p>
+                        <div className="bg-blue-950/45 border border-blue-500/30 rounded p-1 space-y-0.5 animate-pulse">
+                          <p className="text-blue-300 font-semibold font-sans">cookie: <span className="text-white select-all">c_user=1000... xs=2%3A...</span></p>
+                        </div>
+                        <p className="truncate"><span className="text-blue-400">user-agent:</span> Mozilla...</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 

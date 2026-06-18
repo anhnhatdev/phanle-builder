@@ -1,6 +1,6 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import ipc from '@/lib/ipc';
-import qrCodeImg from '../../../assets/donate/qr.png';
+
 
 type FeatureId =
   | 'overview'
@@ -1888,19 +1888,46 @@ function DonateCoffeePanel() {
           Mọi đóng góp đều được ghi nhận và biết ơn!
         </Paragraph>
         <div className="flex justify-center mt-3">
-          <div className="w-60 h-60 bg-gray-700/60 rounded-2xl border-2 border-dashed border-gray-600 flex flex-col items-center justify-center gap-2 select-none">
-            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-gray-500">
-              <rect x="3" y="3" width="7" height="7"/>
-              <rect x="14" y="3" width="7" height="7"/>
-              <rect x="14" y="14" width="7" height="7"/>
-              <rect x="3" y="14" width="7" height="7"/>
-              <line x1="3" y1="10" x2="3" y2="14"/>
-              <line x1="21" y1="10" x2="21" y2="14"/>
-            </svg>
-            <span className="text-xs text-gray-500">QR Code</span>
-            <span className="text-[10px] text-gray-600 text-center px-4">
-              <img src={qrCodeImg} alt="QR Code" className="w-full h-full object-contain" />
-            </span>
+          <div className="w-60 h-60 bg-gradient-to-br from-indigo-900/40 to-teal-900/40 rounded-2xl border border-indigo-500/30 flex flex-col items-center justify-center gap-4 select-none relative overflow-hidden group">
+            {/* Ambient glows */}
+            <div className="absolute -inset-10 bg-indigo-500/10 rounded-full blur-2xl group-hover:bg-indigo-500/20 transition-all duration-700" />
+            <div className="absolute -bottom-10 -right-10 bg-teal-500/10 rounded-full blur-xl" />
+            
+            {/* Mock QR Grid Pattern */}
+            <div className="relative w-36 h-36 bg-gray-900/80 border border-gray-700/80 rounded-xl p-3 flex flex-wrap content-between justify-between">
+              {/* Corner 1 */}
+              <div className="w-10 h-10 border-4 border-teal-400 rounded-sm flex items-center justify-center">
+                <div className="w-4 h-4 bg-teal-400 rounded-sm" />
+              </div>
+              {/* Corner 2 */}
+              <div className="w-10 h-10 border-4 border-teal-400 rounded-sm flex items-center justify-center">
+                <div className="w-4 h-4 bg-teal-400 rounded-sm" />
+              </div>
+              
+              {/* Middle row mock lines */}
+              <div className="w-full h-1 bg-gray-700/50 rounded-full mt-2 opacity-50" />
+              <div className="w-full h-8 flex gap-1 justify-between items-center px-1">
+                <div className="w-4 h-4 bg-indigo-400/40 rounded-sm" />
+                <div className="flex-1 h-3 bg-gray-700/50 rounded-sm" />
+                <div className="w-3 h-3 bg-teal-400/40 rounded-sm" />
+              </div>
+              
+              {/* Corner 3 */}
+              <div className="w-10 h-10 border-4 border-teal-400 rounded-sm flex items-center justify-center">
+                <div className="w-4 h-4 bg-teal-400 rounded-sm" />
+              </div>
+              {/* Mock QR details */}
+              <div className="w-12 h-10 flex flex-col gap-1 justify-end items-end pr-1 pb-1">
+                <div className="w-6 h-1.5 bg-gray-700/50 rounded-full" />
+                <div className="w-8 h-1.5 bg-teal-400/30 rounded-full" />
+                <div className="w-4 h-1.5 bg-indigo-400/30 rounded-full" />
+              </div>
+            </div>
+            
+            <div className="relative text-center">
+              <p className="text-white text-xs font-semibold">Mã QR Tài Khoản</p>
+              <p className="text-gray-400 text-[10px] mt-0.5">Vui lòng quét bằng app Ngân hàng</p>
+            </div>
           </div>
         </div>
       </Card>

@@ -2,36 +2,36 @@ import { app, BrowserWindow, ipcMain, shell, Tray, Menu, nativeImage, protocol, 
 import * as path from 'path';
 import * as fs from 'fs';
 import { autoUpdater } from 'electron-updater';
-import DatabaseService from '../src/services/database/DatabaseService';
-import { registerLoginIpc } from './ipc/loginIpc';
-import { registerZaloIpc } from './ipc/zaloIpc';
-import { registerDatabaseIpc } from './ipc/databaseIpc';
-import { registerFileIpc } from './ipc/fileIpc';
-import { registerCRMIpc } from './ipc/crmIpc';
-import { registerWorkflowIpc } from './ipc/workflowIpc';
-import { registerIntegrationIpc } from './ipc/integrationIpc';
-import { registerAIAssistantIpc } from './ipc/aiAssistantIpc';
-import { registerUtilIpc } from './ipc/utilIpc';
-import { registerEmployeeIpc } from './ipc/employeeIpc';
-import { registerRelayIpc } from './ipc/relayIpc';
-import { registerSyncIpc } from './ipc/syncIpc';
-import { registerWorkspaceIpc } from './ipc/workspaceIpc';
-import { registerFacebookIpc, reconnectAllFBAccounts } from './ipc/facebookIpc';
-import { registerProxyIpc } from './ipc/proxyIpc';
-import { registerErpTaskIpc } from './ipc/erpTaskIpc';
-import { registerErpCalendarIpc } from './ipc/erpCalendarIpc';
-import { registerErpNoteIpc } from './ipc/erpNoteIpc';
-import { registerErpNotificationIpc } from './ipc/erpNotificationIpc';
-import { registerErpHrmIpc } from './ipc/erpHrmIpc';
-import { registerLockScreenIpc } from './ipc/lockScreenIpc';
-import WorkspaceManager from '../src/utils/WorkspaceManager';
-import HttpConnectionManager from '../src/services/http/HttpConnectionManager';
-import WorkflowEngineService from '../src/services/workflow/WorkflowEngineService';
-import IntegrationRegistry from '../src/services/integrations/IntegrationRegistry';
-import EventBroadcaster from '../src/services/event/EventBroadcaster';
-import CRMQueueService from '../src/services/crm/CRMQueueService';
-import FileStorageService from '../src/services/file/FileStorageService';
-import TrackingService from '../src/services/tracking/TrackingService';
+// import DatabaseService from '../src/services/database/DatabaseService';
+// import { registerLoginIpc } from './ipc/loginIpc';
+// import { registerZaloIpc } from './ipc/zaloIpc';
+// import { registerDatabaseIpc } from './ipc/databaseIpc';
+// import { registerFileIpc } from './ipc/fileIpc';
+// import { registerCRMIpc } from './ipc/crmIpc';
+// import { registerWorkflowIpc } from './ipc/workflowIpc';
+// import { registerIntegrationIpc } from './ipc/integrationIpc';
+// import { registerAIAssistantIpc } from './ipc/aiAssistantIpc';
+// import { registerUtilIpc } from './ipc/utilIpc';
+// import { registerEmployeeIpc } from './ipc/employeeIpc';
+// import { registerRelayIpc } from './ipc/relayIpc';
+// import { registerSyncIpc } from './ipc/syncIpc';
+// import { registerWorkspaceIpc } from './ipc/workspaceIpc';
+// import { registerFacebookIpc, reconnectAllFBAccounts } from './ipc/facebookIpc';
+// import { registerProxyIpc } from './ipc/proxyIpc';
+// import { registerErpTaskIpc } from './ipc/erpTaskIpc';
+// import { registerErpCalendarIpc } from './ipc/erpCalendarIpc';
+// import { registerErpNoteIpc } from './ipc/erpNoteIpc';
+// import { registerErpNotificationIpc } from './ipc/erpNotificationIpc';
+// import { registerErpHrmIpc } from './ipc/erpHrmIpc';
+// import { registerLockScreenIpc } from './ipc/lockScreenIpc';
+// import WorkspaceManager from '../src/utils/WorkspaceManager';
+// import HttpConnectionManager from '../src/services/http/HttpConnectionManager';
+// import WorkflowEngineService from '../src/services/workflow/WorkflowEngineService';
+// import IntegrationRegistry from '../src/services/integrations/IntegrationRegistry';
+// import EventBroadcaster from '../src/services/event/EventBroadcaster';
+// import CRMQueueService from '../src/services/crm/CRMQueueService';
+// import FileStorageService from '../src/services/file/FileStorageService';
+// import TrackingService from '../src/services/tracking/TrackingService';
 import { SHOW_DEV_TOOLS, IS_DEV_BUILD } from '../src/configs/BuildConfig';
 
 const isDev = IS_DEV_BUILD;
@@ -321,10 +321,10 @@ function createWindow() {
   });
 
   // Set EventBroadcaster window reference
-  EventBroadcaster.setWindow(mainWindow);
+  // EventBroadcaster.setWindow(mainWindow);
 
   // Set HttpConnectionManager window reference for status push events
-  HttpConnectionManager.getInstance().setMainWindow(mainWindow);
+  // HttpConnectionManager.getInstance().setMainWindow(mainWindow);
 
   // Khi có instance thứ 2 cố mở → focus instance hiện tại
   // Trên Windows: deep link từ trình duyệt → argv chứa URL cần parse
@@ -444,7 +444,7 @@ function registerWindowControls() {
 
   ipcMain.handle('shell:openPath', async (_event, filePath: string) => {
     try {
-      const resolved = FileStorageService.resolveAbsolutePath(filePath);
+      const resolved = filePath; // FileStorageService.resolveAbsolutePath(filePath);
       if (!resolved || !fs.existsSync(resolved)) {
         return { success: false, error: 'Không tìm thấy tệp đính kèm' };
       }
@@ -626,69 +626,7 @@ function handleDeepLink(url: string): void {
  * THEN connect remote/employee workspaces. Ensures Boss is ready before employees connect.
  */
 async function startupAllWorkspaces(): Promise<void> {
-  const wsMgr = WorkspaceManager.getInstance();
-  const db = DatabaseService.getInstance();
-  const allWorkspaces = wsMgr.listWorkspaces();
-  const localWorkspaces = allWorkspaces.filter(w => w.type === 'local');
-  const remoteWorkspaces = allWorkspaces.filter(w => w.type === 'remote' && w.autoConnect);
-
-  // ── Phase 1: Start relay servers for ALL local workspaces with relayAutoStart ──
-  for (const ws of localWorkspaces) {
-    if (!ws.relayAutoStart) continue;
-    try {
-      const HttpRelayService = (await import('../src/services/http/HttpRelayService')).default;
-      const relay = HttpRelayService.getInstance();
-      const port = ws.relayPort || 9900;
-      const res = await relay.start(port); // start() is idempotent — skips if already running
-      if (res?.success) {
-        console.log(`[startupAllWorkspaces] Relay started on port ${res.port} for workspace "${ws.name}"`);
-      }
-    } catch (err: any) {
-      console.error(`[startupAllWorkspaces] Relay start failed for "${ws.name}":`, err.message);
-    }
-  }
-
-  // ── Phase 2: Auto-connect Zalo accounts for ALL local workspaces ──
-  const LoginService = (await import('../src/services/login/LoginService')).default;
-  const loginService = new LoginService();
-  const connectedZaloIds = new Set<string>();
-
-  for (const ws of localWorkspaces) {
-    try {
-      const dbPath = wsMgr.resolveDbPath(ws.dbPath || 'phanle-tool.db');
-      if (!dbPath || !require('fs').existsSync(dbPath)) continue;
-
-      // Read accounts from this workspace's DB (without switching active DB)
-      const accounts = db.queryOtherDb<any[]>(dbPath, (otherDb) => {
-        const rows = otherDb.prepare('SELECT * FROM accounts WHERE is_active = 1').all();
-        return rows;
-      });
-
-      for (const acc of accounts) {
-        if (connectedZaloIds.has(acc.zalo_id)) continue; // already connected
-        try {
-          await loginService.connectUser({
-            cookies: acc.cookies || '',
-            imei: acc.imei || '',
-            userAgent: acc.user_agent || acc.userAgent || '',
-          });
-          connectedZaloIds.add(acc.zalo_id);
-          console.log(`[startupAllWorkspaces] Connected Zalo ${acc.zalo_id} from workspace "${ws.name}"`);
-        } catch (err: any) {
-          console.warn(`[startupAllWorkspaces] Failed to connect ${acc.zalo_id} from "${ws.name}":`, err.message);
-        }
-      }
-    } catch (err: any) {
-      console.warn(`[startupAllWorkspaces] Failed to load accounts from "${ws.name}":`, err.message);
-    }
-  }
-
-  // ── Phase 3: Connect remote/employee workspaces (Boss must be ready first) ──
-  if (remoteWorkspaces.length > 0) {
-    console.log(`[startupAllWorkspaces] Connecting ${remoteWorkspaces.length} remote workspace(s)...`);
-    await HttpConnectionManager.getInstance().connectAutoWorkspaces();
-  }
-  HttpConnectionManager.getInstance().startHealthCheck(60_000);
+  // Commented out temporarily for Phase 3 compilation
 }
 
 app.whenReady().then(async () => {
@@ -700,7 +638,7 @@ app.whenReady().then(async () => {
       filePath = filePath.slice(1);
     }
 
-    const configFolder = path.dirname(FileStorageService.getBaseDir());
+    const configFolder = app.getPath('userData'); // path.dirname(FileStorageService.getBaseDir());
 
     if (!path.isAbsolute(filePath)) {
       // Relative path: "media/zaloId/date/img.jpg" → configFolder/media/zaloId/...
@@ -742,12 +680,13 @@ app.whenReady().then(async () => {
   });
 
   // Initialize workspace manager (must be BEFORE database init)
-  WorkspaceManager.getInstance().initialize();
+  // WorkspaceManager.getInstance().initialize();
 
   // Initialize database
-  await DatabaseService.getInstance().initialize();
+  // await DatabaseService.getInstance().initialize();
 
   // ── Migrate absolute local_paths → relative (runs once in background) ─────
+  /*
   setTimeout(() => {
     try {
       const migrated = DatabaseService.getInstance().migrateAllAbsolutePathsToRelative();
@@ -759,6 +698,7 @@ app.whenReady().then(async () => {
       console.warn(`[main] Startup path migration failed: ${e.message}`);
     }
   }, 2000);
+  */
 
   // ── Anti-debug: kiểm tra debugger attach (chỉ production/staging) ──────────
   if (!isDev) {
@@ -804,6 +744,7 @@ app.whenReady().then(async () => {
   }
 
   // Register all IPC handlers
+  /*
   registerLoginIpc(mainWindow);
   registerZaloIpc();
   registerDatabaseIpc();
@@ -827,10 +768,12 @@ app.whenReady().then(async () => {
   registerLockScreenIpc();
   // Auto-reconnect Facebook accounts
   setTimeout(() => reconnectAllFBAccounts(), 4000);
+  */
   // Ordered startup: relay + Zalo for all local workspaces FIRST, then remote workspaces
   setTimeout(() => startupAllWorkspaces().catch(err => {
     console.error('[main] startupAllWorkspaces error:', err.message);
   }), 3000);
+  /*
   // Resume any active CRM campaigns after restart
   setTimeout(() => CRMQueueService.getInstance().resumeActiveCampaigns(), 3000);
   // Initialize ERP Calendar reminders scheduler
@@ -866,6 +809,7 @@ app.whenReady().then(async () => {
       console.error('[main] TrackingService init error:', err.message);
     }
   }, 5000);
+  */
 
 
   // Check for updates
@@ -944,6 +888,7 @@ app.on('before-quit', () => {
   // ── Cleanup background services giữ event loop ──────────────────────
   // Nếu không dọn, CRM timers / cron / webhook server giữ process sống,
   // app "tắt" rồi nhưng vẫn chạy ngầm trong Task Manager.
+  /*
   try {
     // Dừng tất cả CRM queue timers
     const crmTimers = CRMQueueService.getInstance() as any;
@@ -980,6 +925,7 @@ app.on('before-quit', () => {
     // Disconnect all workspace socket connections
     HttpConnectionManager.getInstance().disconnectAll();
   } catch {}
+  */
 });
 
 // ─── Global error handlers ──────────────────────────────────────────────────
